@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <meta charset="UTF-8"/>    
+   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>Upload Image</title>
+   <style>
+       body{
+           margin: 0;
+       }
+       .container{
+           width: 1024px;
+           display: flex;
+           align-items: center;
+       }
+       .container img{
+           width: 400px;
+           margin-right: 20px;
+       }
+       .buttonHolder{ text-align: left; }
+   </style>
+ </head>
+ <body>
+
+   {% if msg %}
+   <h1>{{ msg }}</h1>
+   {% endif %}
+  
+   <h1>Upload new File</h1>
+  
+   <form method=post enctype=multipart/form-data action={{url_for('upload_page')}}>
+     <div class="buttonHolder">
+     <p><input type=file name=file>
+     <input type=submit value=Upload>
+     </div>
+   </form>
+     
+   <form method=get enctype=multipart/form-data action={{url_for('search_image_text')}}>
+       <div class="buttonHolder">
+           {% if extracted_text %}
+           <p><input type=text name=Search placeholder=Text>
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           <input type=submit value=SearchText>
+           {% endif %}
+       </div>
+   </form>
+
+   <h1>Result:</h1>
+     
+   <div class="container">
+        {% if img_src %}
+            <div>
+                <img src="{{ img_src }}">
+            </div>
+        {% endif %}
+            
+        {% if extracted_text %}
+            <p> The extracted text from the image above is: <br><b> {{ extracted_text }} </b></p>
+   </div>
+   {% else %}
+     The extracted text will be displayed here
+   {% endif %}
+     
+ </body>
+</html>
