@@ -9,7 +9,7 @@
        body{
            margin: 0;
        }
-       .container{
+       /* .container{
            width: 1024px;
            display: flex;
            align-items: center;
@@ -17,50 +17,71 @@
        .container img{
            width: 400px;
            margin-right: 20px;
-       }
-       .buttonHolder{ text-align: left; }
+       } */
+       .container_img {
+        display: flex;
+        align-items: center;
+        justify-content: center
+        }
+        img {
+            max-width: 100%
+        }
+        .image {
+            flex-basis: 100%
+        }
+        .text {
+            font-size: 20px;
+            padding-left: 20px;
+        }
+        .buttonHolder{ text-align: left; }
    </style>
  </head>
  <body>
-
-   {% if msg %}
-   <h1>{{ msg }}</h1>
-   {% endif %}
+   {% extends 'base.html' %}
+   {% block content %} 
+   <h1>{% block title %} Welcome to Image Word Finder {% endblock %}</h1>
+   <!-- {% if msg %}
+   <h5>{{ msg }}</h5>
+   {% endif %} -->
   
-   <h1>Upload new File</h1>
+   <h5>Upload new File</h5>
   
-   <form method=post enctype=multipart/form-data action={{url_for('upload_page')}}>
-     <div class="buttonHolder">
+   <form method=post enctype=multipart/form-data action={{url_for("upload_image")}}>
+     <div class="input-group">
      <p><input type=file name=file>
-     <input type=submit value=Upload>
+     <input type=submit class="btn btn-secondary btn-sm" value=Upload>
      </div>
    </form>
      
    <form method=get enctype=multipart/form-data action={{url_for('search_image_text')}}>
-       <div class="buttonHolder">
-           {% if extracted_text %}
+       {% if extracted_text %}
+           <div class="buttonHolder">
            <p><input type=text name=Search placeholder=Text>
-               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-           <input type=submit value=SearchText>
-           {% endif %}
-       </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           <input type=submit class="btn btn-secondary btn-sm" value=SearchText>
+            </div>
+
+        {% endif %}
+       
    </form>
 
-   <h1>Result:</h1>
+   <h5>Result:</h5>
      
-   <div class="container">
+   <div class="container_img">
         {% if img_src %}
-            <div>
-                <img src="{{ img_src }}">
-            </div>
+        <div class="image">
+            <img src="{{ img_src }}">
+        </div>
+            {% if extracted_text %}
+            <div class="text">
+                <b> The extracted text from the image uploaded is:</b> 
+                <br>{{ extracted_text }} 
+            </div>  
         {% endif %}
-            
-        {% if extracted_text %}
-            <p> The extracted text from the image above is: <br><b> {{ extracted_text }} </b></p>
    </div>
    {% else %}
-     The extracted text will be displayed here
+    The extracted text will appear here
    {% endif %}
-     
+   {% endblock %}
  </body>
 </html>

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, request, redirect, url_for, render_template, make_response
+from flask import Flask, flash, request, redirect, url_for, render_template, make_response,flash
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from flask_caching import Cache
@@ -42,15 +42,17 @@ def home_page():
 
 # route and function to handle the upload page
 @app.route('/upload', methods=['GET', 'POST'])
-def upload_page():
+def upload_image():
     if request.method == 'POST':
         # check if there is a file in the request
         if 'file' not in request.files:
-            return render_template('upload.html', msg='No file selected')
+            flash('No file selected','warning')
+            return render_template('upload.html')
         file = request.files['file']
         # if no file is selected
         if file.filename == '':
-            return render_template('upload.html', msg='No file selected')
+            flash('No file selected','warning')
+            return render_template('upload.html')
 
         if file and allowed_file(file.filename):
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
@@ -61,9 +63,8 @@ def upload_page():
             cache.set("filename",filename)
             cache.set("extracted_data", extracted_data)
             cache.set("extracted_text",extracted_text)
-            
+            flash('Successfully processed','success')
             return render_template('upload.html',
-                                   msg='Successfully processed',
                                    extracted_text=extracted_text,
                                    img_src=UPLOAD_FOLDER + file.filename,
                                    img_name=filename)
